@@ -1,5 +1,5 @@
 ###################################################################################################################################
-##################################fit pharmacodynamic function and impute missing data#############################################
+##################################growth rates with censoring and pharmacodynamics#################################################
 ###################################################################################################################################
 
 #set working directory  
@@ -10,6 +10,8 @@ library("drc")
 library("XLConnect")
 library("metafor")
 library("bbmle")
+library("drc")
+library(plotrix)
 
 # Negative log-likelihood
 nll <- function(a, b, sigma, data = data2regress) {
@@ -76,52 +78,52 @@ for(j in unique(mydata$replicate)){
   pdf(paste(name,sep=""))
   hours=data$hours
   time=data$hours
-  CFU=data$count*data$dilution*100
-  #CFU[CFU==0&time==0]<-NA
+  
   #set CFU to 100 CFU (detection limit) when zero is counted
+  CFU=data$count*data$dilution*100
   CFU[CFU==0]<-100
-
-  #conc is needed to plot the points and for the regressions only for measured points conc2 to plot the lines until 6 hours
   antibiotic=data$antibiotic.conc
   ab.conc<-factor(antibiotic)
   slopes<-vector("numeric",length=nlevels(ab.conc))
+  
+  #conc is needed to plot the points and for the regressions only for measured points conc2 to plot the lines until 6 hours
   conc=round(data$antibiotic.conc,3)
   conc2=mydata$antibiotic.conc
   conc2[conc2==min(conc)]=0
   conc[conc==min(conc)]=0
   conc=factor(conc)
   conc=levels(conc)
-  
+
   #x values for linear regression
   tmin<-0 
   tmax<-6 
-  
-  #define a vector for the decline rates:
 
-
-  #make regressions including censoring, all data smaller or equal than 1 (Limit of detection) are censored
+  #make regressions to caclulate growth rates including censoring, all data smaller or equal than 1 (Limit of detection) are censored  
   for(idose in 1:nlevels(ab.conc)){
-    dose<-as.numeric(levels(ab.conc)[idose]) 
+    dose<-as.numeric(levels(ab.conc)[idose])
     cens=CFU[hours>=tmin&hours<=tmax & antibiotic==dose]
     cens[cens<=1]<-1
     cens[cens>1]<-0
     y_cens=log(CFU[hours>=tmin & hours<=tmax &antibiotic==dose])
     data2points<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=CFU[hours>=tmin & hours<=tmax &antibiotic==dose],cens=cens)
     data2regress<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=y_cens,cens=cens)
-    fit <- mle2(nll, start=list(a=max(y_cens), b=-5, sigma = 0.1), method="Nelder-Mead", control=list(maxit=1e3))
+    fit <- mle2(nll, start=list(a=log(1000000), b=-1, sigma = 0.1), method="Nelder-Mead", control=list(maxit=1e3))
     slope <- data.frame(coef(fit)[[2]],dose)
     predict<-coef(fit)[[1]]+data2regress$x*coef(fit)[[2]]  
     slopes <- rbind(slope,slopes)
   }
+  
+  #fit pharmacodynamic function to growth rates
   names(slopes)<-c("slope","dose")
   dose=as.numeric(levels(ab.conc))
-  library("drc")
   model=drm(slopes$slope~slopes$dose,fct=LL.4())
-  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-2.5,1.5),xlab="Antibiotic concentration [mg/L]",ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
-  legend("bottomleft",conc, bty="n", text.col="gray47",pt.bg=mypalette,pch=21,cex=0.8,title="conc.[mg/L]")
-  #legend("bottomleft",legend=i,cex=2,bty="n")
-  library(plotrix)
+  
+  #plot the pharmacodynamic model
+  options(scipen=1000)
+  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,1.5),xlab="Antibiotic concentration [mg/L]",ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
+  legend("topright",conc, bty="n",pt.bg=mypalette,pch=21,cex=0.8,title="conc.[mg/L]")
   axis.break(axis=1,breakpos=min(data$antibiotic.conc)*2,style="slash") 
+  
   #extract parameters from model summary
   kappa=coefficients(model)[1]
   kappaerr=coef(summary(model))[1,2]
@@ -135,17 +137,15 @@ for(j in unique(mydata$replicate)){
   zMIC=MIC[1]
   zMICerr=MIC[2]
   experiment=mydata$ab[mydata$replicate==j]
-#   print(experiment)
-  Liste=data.frame(j,toString(experiment[1]),kappa,kappaerr,upper,uppererr,lower,lowererr,inflection,inflectionerr,zMIC,zMICerr)
+  
+  #make list with parameters for each plot
+  Liste=data.frame(k,j,toString(experiment[1]),kappa,kappaerr,upper,uppererr,lower,lowererr,inflection,inflectionerr,zMIC,zMICerr)
   parmlist=rbind(Liste,parmlist)
   dev.off()
   k=k+1
 }
-names(parmlist)<-c("Identifier","Experiment","kappa","kappaerr","upper","uppererr","lower","lowererr","inflection","inflectionerr","zMIC","zMICerr")
-mean=data.frame(experiment[1],mean(parmlist$upper),mean(parmlist$upper),mean(parmlist$lower),mean(parmlist$inflection),mean(parmlist$zMIC),mean(parmlist$MICU),mean(parmlist$MICL))  
-means <-aggregate(parmlist, by=list(parmlist$experiment.1.),FUN=mean, na.rm=TRUE)
-print(aggdata)
-means=c()
+names(parmlist)<-c("Number","Identifier","Experiment","kappa","kappaerr","upper","uppererr","lower","lowererr","inflection","inflectionerr","zMIC","zMICerr")
+
 for (l in unique(parmlist$Experiment)){
   parmlistsub <-subset(parmlist,parmlist$Experiment==l)
   kappamodel <- rma(yi = parmlistsub$kappa, sei = parmlistsub$kappaerr, data = parmlistsub, method = 'FE')
@@ -163,17 +163,19 @@ for (l in unique(parmlist$Experiment)){
   means=rbind(mean,means)
 } 
  names(means) <- c("experiment","parameter","estimate","se","zval","pval","ci.lb","ci.ub")
- #write data to files, parameters from singleexperiments and mean of all parameters
+ 
+#write summary statistics to excel file
  data=data.frame(parmlist)
- allplots <- loadWorkbook("summary_statistics5.xlsx", create = TRUE)  
+ allplots <- loadWorkbook("summary_statistics.xlsx", create = TRUE)  
  createSheet(allplots, name = "parameterlist")
  writeWorksheet(allplots, means, sheet = "parameterlist", startRow = 1, startCol = 1)
  saveWorkbook(allplots)
-# # 
-  singleplots <- loadWorkbook("singleplot_statistics5.xlsx", create = TRUE)  
+
+#write parameters for each plot to excel file
+  singleplots <- loadWorkbook("singleplot_statistics.xlsx", create = TRUE)  
   createSheet(singleplots, name = "parameterlist")
   writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
   saveWorkbook(singleplots)
  
-# rm(list=ls())
+ rm(list=ls())
  graphics.off()
