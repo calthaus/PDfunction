@@ -1,10 +1,8 @@
 ###################################################################################################################################
 ##################################growth rates with censoring and pharmacodynamics#################################################
 ###################################################################################################################################
-
-#set working directory  
+#set working directory
 setwd("C:/Users/sfoerster/ABinteractions/Time_kill/ClassicalTK")
-
 #load libraries
 library("drc")
 library("XLConnect")
@@ -12,20 +10,26 @@ library("metafor")
 library("bbmle")
 library("drc")
 library(plotrix)
-
 # Negative log-likelihood
 nll <- function(a, b, sigma, data = data2regress) {
   m <- a + b * data$x
   m <- ifelse(m == 0, 1e-5, m) # to avoid divisions by 0 (not really clean, but this should happen very rarely)
-  #v <- (sigma / m)^2           # to avoid issues if m < 0 in dnorm, pnorm calls below  
-  #v <- (sigma)^2              # constant error (additive on log scale)
-  v <- (sigma/data$y_cens)^2             # constant error (additive on log scale)
-  ll_i <- (1 - data$cens) * dnorm(data$y_cens, mean = m, sd = sqrt(v), log = TRUE) + 
-  data$cens * pnorm(data$y_cens, mean = m, sd = sqrt(v), log.p = TRUE) 
+  #v <- (sigma / m)^2 # to avoid issues if m < 0 in dnorm, pnorm calls below
+  #v <- (sigma)^2 # constant error (additive on log scale)
+  v <- (sigma/data$y_cens)^2 # constant error (additive on log scale)
+  ll_i <- (1 - data$cens) * dnorm(data$y_cens, mean = m, sd = sqrt(v), log = TRUE) +
+    data$cens * pnorm(data$y_cens, mean = m, sd = sqrt(v), log.p = TRUE)
   ll <- sum(ll_i)
   return(-ll)
 }
 
+decimalplaces <- function(x) {
+  if ((x %% 1) != 0) {
+    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
+  } else {
+    return(0)
+  }
+}
 #initialize some empty vectors and empty variables
 parmlist=vector()
 append2=vector()
@@ -36,40 +40,41 @@ slopes<-vector()
 i <- 1
 j <- 1
 k <- 1
-
 #define patterns to be recognized
 sourcefiledir<-"input"
 verzeichnis<-"input"
 sourcefilepattern<-".txt"
-
 #define some colors
 mypalette<- c("red","lightblue","lightblue","lightblue","#C6DBEF", "#9ECAE1" ,"#6BAED6" ,"#4292C6" ,"#2171B5" ,"#08519C", "#08306B","black","black","black","black","black")
-
 # list of all files and pattern to be recognized in these files
 files <- list.files(path =sourcefiledir, pattern = sourcefilepattern, all.files = FALSE, recursive = FALSE, ignore.case = FALSE, include.dirs = FALSE)
 ablist<-c("WHOA_AZ","WHOA_CIP","WHOA_Tet","WHOA_CT","F89_AZ","F89_CIP","F89_Tet","F89_CT")
-
-
 #write list of datasets with the recognized pattern
 for (ab in ablist){
   replicatespattern=ab
   replicates <- list.files(path =sourcefiledir, pattern = ab, all.files = FALSE, recursive = FALSE, ignore.case = FALSE, include.dirs = FALSE)
-
-#read data from file with the recognized pattern and append to a dataframe
+  #read data from file with the recognized pattern and append to a dataframe
   for (replicate in replicates){
     append1 <- read.table(paste(verzeichnis,"/",replicate,sep=""),header=TRUE)
     append2 <- cbind(append1,replicate,ab,i)
-    mydata<-rbind(append2,mydata) 
+    mydata<-rbind(append2,mydata)
     i=i+1
   }
 }
-
 #remove very problematic data that have a count of zero already after 0h of incubation with the antibiotic
+#remove values when already at timepoint 0 no colonies couldnt be counted anymore
 problem<-subset(mydata,mydata$hours==0&mydata$count==0)
+
+print(problem)
 rows_to_garbage1 = which(mydata$sample==toString(problem$sample[1]), useNames = TRUE)
-mydata <- mydata[-c(rows_to_garbage1),]
+if(is.integer0(rows_to_garbage1)==F){
+  mydata <- mydata[-c(rows_to_garbage1),]
+}
 rows_to_garbage2 = which(mydata$sample==toString(problem$sample[2]), useNames = TRUE)
-mydata <- mydata[-c(rows_to_garbage2),]
+print(rows_to_garbage2)
+if(is.integer0(rows_to_garbage2)==F){
+  mydata <- mydata[-c(rows_to_garbage2),]
+}
 
 #make a plot and summary statistics for each experiment
 for(j in unique(mydata$replicate)){
@@ -78,27 +83,23 @@ for(j in unique(mydata$replicate)){
   pdf(paste(name,sep=""))
   hours=data$hours
   time=data$hours
-  
   #set CFU to 100 CFU (detection limit) when zero is counted
   CFU=data$count*data$dilution*100
   CFU[CFU==0]<-100
   antibiotic=data$antibiotic.conc
   ab.conc<-factor(antibiotic)
-  slopes<-vector("numeric",length=nlevels(ab.conc))
-  
+  slopes<-vector("numeric")
   #conc is needed to plot the points and for the regressions only for measured points conc2 to plot the lines until 6 hours
-  conc=round(data$antibiotic.conc,3)
+  conc=round(data$antibiotic.conc,decimalplaces(min(data$antibiotic.conc)))
   conc2=mydata$antibiotic.conc
   conc2[conc2==min(conc)]=0
   conc[conc==min(conc)]=0
   conc=factor(conc)
   conc=levels(conc)
-
   #x values for linear regression
-  tmin<-0 
-  tmax<-6 
-
-  #make regressions to caclulate growth rates including censoring, all data smaller or equal than 1 (Limit of detection) are censored  
+  tmin<-0
+  tmax<-6
+  #make regressions to caclulate growth rates including censoring, all data smaller or equal than 1 (Limit of detection) are censored
   for(idose in 1:nlevels(ab.conc)){
     dose<-as.numeric(levels(ab.conc)[idose])
     cens=CFU[hours>=tmin&hours<=tmax & antibiotic==dose]
@@ -107,23 +108,21 @@ for(j in unique(mydata$replicate)){
     y_cens=log(CFU[hours>=tmin & hours<=tmax &antibiotic==dose])
     data2points<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=CFU[hours>=tmin & hours<=tmax &antibiotic==dose],cens=cens)
     data2regress<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=y_cens,cens=cens)
+    #print(data2regress)
     fit <- mle2(nll, start=list(a=log(1000000), b=-1, sigma = 0.1), method="Nelder-Mead", control=list(maxit=1e3))
     slope <- data.frame(coef(fit)[[2]],dose)
-    predict<-coef(fit)[[1]]+data2regress$x*coef(fit)[[2]]  
+    predict<-coef(fit)[[1]]+data2regress$x*coef(fit)[[2]]
     slopes <- rbind(slope,slopes)
   }
-  
   #fit pharmacodynamic function to growth rates
   names(slopes)<-c("slope","dose")
-  dose=as.numeric(levels(ab.conc))
+  #dose=as.numeric(levels(ab.conc))
   model=drm(slopes$slope~slopes$dose,fct=LL.4())
-  
   #plot the pharmacodynamic model
   options(scipen=1000)
-  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,1.5),xlab="Antibiotic concentration [mg/L]",ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
+  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,2),xlab="Antibiotic concentration [mg/L]",main=j, ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
   legend("topright",conc, bty="n",pt.bg=mypalette,pch=21,cex=0.8,title="conc.[mg/L]")
-  axis.break(axis=1,breakpos=min(data$antibiotic.conc)*2,style="slash") 
-  
+  axis.break(axis=1,breakpos=min(data$antibiotic.conc)*2,style="slash")
   #extract parameters from model summary
   kappa=coefficients(model)[1]
   kappaerr=coef(summary(model))[1,2]
@@ -137,7 +136,6 @@ for(j in unique(mydata$replicate)){
   zMIC=MIC[1]
   zMICerr=MIC[2]
   experiment=mydata$ab[mydata$replicate==j]
-  
   #make list with parameters for each plot
   Liste=data.frame(k,j,toString(experiment[1]),kappa,kappaerr,upper,uppererr,lower,lowererr,inflection,inflectionerr,zMIC,zMICerr)
   parmlist=rbind(Liste,parmlist)
@@ -158,24 +156,20 @@ for (l in unique(parmlist$Experiment)){
   inflectionsum <- data.frame(cbind(l,"inflection",summary(inflectionmodel)[1],summary(inflectionmodel)[2],summary(inflectionmodel)[3],summary(inflectionmodel)[4],summary(inflectionmodel)[5],summary(inflectionmodel)[6]))
   zMICmodel <- rma(yi = parmlistsub$zMIC, sei = parmlistsub$zMICerr, data = parmlistsub, method = 'FE')
   zMICsum <- data.frame(cbind(l,"zMIC",summary(zMICmodel)[1],summary(zMICmodel)[2],summary(zMICmodel)[3],summary(zMICmodel)[4],summary(zMICmodel)[5],summary(zMICmodel)[6]))
-  
   mean=rbind(kappasum,uppersum,lowersum,inflectionsum,zMICsum)
   means=rbind(mean,means)
-} 
- names(means) <- c("experiment","parameter","estimate","se","zval","pval","ci.lb","ci.ub")
- 
+}
+names(means) <- c("experiment","parameter","estimate","se","zval","pval","ci.lb","ci.ub")
 #write summary statistics to excel file
- data=data.frame(parmlist)
- allplots <- loadWorkbook("summary_statistics.xlsx", create = TRUE)  
- createSheet(allplots, name = "parameterlist")
- writeWorksheet(allplots, means, sheet = "parameterlist", startRow = 1, startCol = 1)
- saveWorkbook(allplots)
-
+data=data.frame(parmlist)
+allplots <- loadWorkbook("summary_statistics.xlsx", create = TRUE)
+createSheet(allplots, name = "parameterlist")
+writeWorksheet(allplots, means, sheet = "parameterlist", startRow = 1, startCol = 1)
+saveWorkbook(allplots)
 #write parameters for each plot to excel file
-  singleplots <- loadWorkbook("singleplot_statistics.xlsx", create = TRUE)  
-  createSheet(singleplots, name = "parameterlist")
-  writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
-  saveWorkbook(singleplots)
- 
- rm(list=ls())
- graphics.off()
+singleplots <- loadWorkbook("singleplot_statistics.xlsx", create = TRUE)
+createSheet(singleplots, name = "parameterlist")
+writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
+saveWorkbook(singleplots)
+#rm(list=ls())
+graphics.off()
