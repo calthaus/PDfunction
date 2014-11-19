@@ -10,25 +10,39 @@ library("metafor")
 library("bbmle")
 library("drc")
 library(plotrix)
+# define some functions:
 # Negative log-likelihood
 nll <- function(a, b, sigma, data = data2regress) {
   m <- a + b * data$x
-  m <- ifelse(m == 0, 1e-5, m) # to avoid divisions by 0 (not really clean, but this should happen very rarely)
-  #v <- (sigma / m)^2 # to avoid issues if m < 0 in dnorm, pnorm calls below
-  #v <- (sigma)^2 # constant error (additive on log scale)
-  v <- (sigma/data$y_cens)^2 # constant error (additive on log scale)
+  m <- ifelse(m == 0, 1e-5, m)
+  v <- (sigma/data$y_cens)^2
   ll_i <- (1 - data$cens) * dnorm(data$y_cens, mean = m, sd = sqrt(v), log = TRUE) +
     data$cens * pnorm(data$y_cens, mean = m, sd = sqrt(v), log.p = TRUE)
   ll <- sum(ll_i)
   return(-ll)
 }
-
+#function to catch errors resulting from integer(0)
+is.integer0 <- function(x)
+{
+  is.integer(x) && length(x) == 0L
+}
+#function to calculate decimalplaces for the antibiotic concentrations
 decimalplaces <- function(x) {
   if ((x %% 1) != 0) {
     nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
   } else {
     return(0)
   }
+}
+#function to remove data when the antibiotic killed cells immediately (count of zero at 0 hours after adding the compound)
+remove <- function (x){ 
+  for (i in 1:x){
+    mydatasub1 = subset(mydata,mydata$sample==problem$sample[1]&mydata$replicate==problem$replicate[1])
+    mydatasub2 = subset(mydata,mydata$sample==problem$sample[2]&mydata$replicate==problem$replicate[2])
+    mydatasub3 = subset(mydata,mydata$sample==problem$sample[3]&mydata$replicate==problem$replicate[3])
+    sub<-rbind(mydatasub1,mydatasub2,mydatasub3)
+  }
+  return(sub)
 }
 #initialize some empty vectors and empty variables
 parmlist=vector()
@@ -49,11 +63,11 @@ mypalette<- c("red","lightblue","lightblue","lightblue","#C6DBEF", "#9ECAE1" ,"#
 # list of all files and pattern to be recognized in these files
 files <- list.files(path =sourcefiledir, pattern = sourcefilepattern, all.files = FALSE, recursive = FALSE, ignore.case = FALSE, include.dirs = FALSE)
 ablist<-c("WHOA_AZ","WHOA_CIP","WHOA_Tet","WHOA_CT","F89_AZ","F89_CIP","F89_Tet","F89_CT")
-#write list of datasets with the recognized pattern
+#loop for the dataset with the recognized pattern, appends them to a big dataset containing all experiments (mydata)
+print("---------------------------------run started---------------------------------")
 for (ab in ablist){
   replicatespattern=ab
   replicates <- list.files(path =sourcefiledir, pattern = ab, all.files = FALSE, recursive = FALSE, ignore.case = FALSE, include.dirs = FALSE)
-  #read data from file with the recognized pattern and append to a dataframe
   for (replicate in replicates){
     append1 <- read.table(paste(verzeichnis,"/",replicate,sep=""),header=TRUE)
     append2 <- cbind(append1,replicate,ab,i)
@@ -61,21 +75,14 @@ for (ab in ablist){
     i=i+1
   }
 }
-#remove very problematic data that have a count of zero already after 0h of incubation with the antibiotic
+mydata=cbind(mydata,index=rownames(mydata))
 #remove values when already at timepoint 0 no colonies couldnt be counted anymore
 problem<-subset(mydata,mydata$hours==0&mydata$count==0)
-
-print(problem)
-rows_to_garbage1 = which(mydata$sample==toString(problem$sample[1]), useNames = TRUE)
-if(is.integer0(rows_to_garbage1)==F){
-  mydata <- mydata[-c(rows_to_garbage1),]
+data_to_remove<-remove(length(problem$sample))
+cleandata<-as.integer(rownames(data_to_remove))
+if(is.integer0(cleandata)==F){
+  mydata <- mydata[-c(cleandata),]
 }
-rows_to_garbage2 = which(mydata$sample==toString(problem$sample[2]), useNames = TRUE)
-print(rows_to_garbage2)
-if(is.integer0(rows_to_garbage2)==F){
-  mydata <- mydata[-c(rows_to_garbage2),]
-}
-
 #make a plot and summary statistics for each experiment
 for(j in unique(mydata$replicate)){
   data=mydata[mydata$replicate==j,]
@@ -83,7 +90,7 @@ for(j in unique(mydata$replicate)){
   pdf(paste(name,sep=""))
   hours=data$hours
   time=data$hours
-  #set CFU to 100 CFU (detection limit) when zero is counted
+  #set CFU to 100 CFU (detection limit) when zero or 1 is counted
   CFU=data$count*data$dilution*100
   CFU[CFU==0]<-100
   antibiotic=data$antibiotic.conc
@@ -108,20 +115,18 @@ for(j in unique(mydata$replicate)){
     y_cens=log(CFU[hours>=tmin & hours<=tmax &antibiotic==dose])
     data2points<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=CFU[hours>=tmin & hours<=tmax &antibiotic==dose],cens=cens)
     data2regress<-data.frame(x=hours[hours>=tmin & hours<=tmax &antibiotic==dose],y_cens=y_cens,cens=cens)
-    #print(data2regress)
     fit <- mle2(nll, start=list(a=log(1000000), b=-1, sigma = 0.1), method="Nelder-Mead", control=list(maxit=1e3))
     slope <- data.frame(coef(fit)[[2]],dose)
     predict<-coef(fit)[[1]]+data2regress$x*coef(fit)[[2]]
     slopes <- rbind(slope,slopes)
   }
-  #fit pharmacodynamic function to growth rates
+  #fit pharmacodynamic function (Emax with four parameters) to growth rates using drc (based on optim)
   names(slopes)<-c("slope","dose")
-  #dose=as.numeric(levels(ab.conc))
   model=drm(slopes$slope~slopes$dose,fct=LL.4())
   #plot the pharmacodynamic model
   options(scipen=1000)
-  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,2),xlab="Antibiotic concentration [mg/L]",main=j, ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
-  legend("topright",conc, bty="n",pt.bg=mypalette,pch=21,cex=0.8,title="conc.[mg/L]")
+  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,2.5),xlab="Antibiotic concentration [mg/L]",main=j, ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
+  legend("topright",conc, bty="n",pt.bg=mypalette,pch=21,cex=0.7,title="conc.[mg/L]")
   axis.break(axis=1,breakpos=min(data$antibiotic.conc)*2,style="slash")
   #extract parameters from model summary
   kappa=coefficients(model)[1]
@@ -143,7 +148,6 @@ for(j in unique(mydata$replicate)){
   k=k+1
 }
 names(parmlist)<-c("Number","Identifier","Experiment","kappa","kappaerr","upper","uppererr","lower","lowererr","inflection","inflectionerr","zMIC","zMICerr")
-
 for (l in unique(parmlist$Experiment)){
   parmlistsub <-subset(parmlist,parmlist$Experiment==l)
   kappamodel <- rma(yi = parmlistsub$kappa, sei = parmlistsub$kappaerr, data = parmlistsub, method = 'FE')
@@ -161,7 +165,7 @@ for (l in unique(parmlist$Experiment)){
 }
 names(means) <- c("experiment","parameter","estimate","se","zval","pval","ci.lb","ci.ub")
 #write summary statistics to excel file
-data=data.frame(parmlist)
+data=data.frame(round(parmlist,10))
 allplots <- loadWorkbook("summary_statistics.xlsx", create = TRUE)
 createSheet(allplots, name = "parameterlist")
 writeWorksheet(allplots, means, sheet = "parameterlist", startRow = 1, startCol = 1)
@@ -171,5 +175,6 @@ singleplots <- loadWorkbook("singleplot_statistics.xlsx", create = TRUE)
 createSheet(singleplots, name = "parameterlist")
 writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
 saveWorkbook(singleplots)
-#rm(list=ls())
+print("---------------------------------run started---------------------------------")
+rm(list=ls())
 graphics.off()

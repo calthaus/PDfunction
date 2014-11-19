@@ -2,12 +2,23 @@
 ########################## Fitting the Gompertz Model to growth data####################################
 ########################################################################################################
 
-#options
 
-
-#load packages
+#load libraries
 library("cellGrowth", lib.loc="C:/Program Files/R/R-3.1.1/library")
 library("XLConnect")
+library("drc")
+detach("package:drc", unload=TRUE)
+
+# Negative log-likelihood function
+nll <- function(a, b, sigma, data = data2regress) {
+  m <- a + b * data$x
+  m <- ifelse(m == 0, 1e-5, m)
+  v <- (sigma/data$y_cens)^2
+  ll_i <- (1 - data$cens) * dnorm(data$y_cens, mean = m, sd = sqrt(v), log = TRUE) +
+    data$cens * pnorm(data$y_cens, mean = m, sd = sqrt(v), log.p = TRUE)
+  ll <- sum(ll_i)
+  return(-ll)
+}
 
 #read in the data
 setwd("C:/users/sfoerster/ABinteractions/Time_kill/GrowthCurves")
@@ -47,10 +58,11 @@ for (i in strains){
   guess <- guessCellGrowthParams(x,y,relative.height.at.lag=0.2)
   pars<-c(mu=guess$mu,l=guess$l,z0=guess$z0,zmax=guess$zmax)
   fit <- nls(y~gompertz(x,mu,l,z0,zmax),start=guess)
-  print(fit)
+  #fit <- optim(pars,gompertz(x,mu=guess$mu,l=guess$l,z0=guess$z0,zmax=guess$zmax),method="Nelder-Mead")
   xnew=list(x=seq(min(x),max(x),length.out=1000))
   ypredict=exp(predict(fit,xnew))
   options("scipen"=100, "digits"=4)
+  #plot legend and frame to add lines and points after
   plot(data$time[data$strain==i],data$CFU[data$strain==i],axes=FALSE, xlab = "", ylab = "",type="n",log="y",cex=1.5)
   mtext(side = 1, text = "time[h]", cex=1.3,line = 2.5)
   mtext(side = 2, text = expression("CFU [ml"^-1*"]"),cex=1.3, line = 2.5)
