@@ -9,7 +9,7 @@ library("XLConnect")
 library("metafor")
 library("bbmle")
 library("drc")
-library(plotrix)
+library("plotrix")
 # define some functions:
 # Negative log-likelihood
 nll <- function(a, b, sigma, data = data2regress) {
@@ -165,7 +165,8 @@ for (l in unique(parmlist$Experiment)){
 }
 names(means) <- c("experiment","parameter","estimate","se","zval","pval","ci.lb","ci.ub")
 #write summary statistics to excel file
-data=data.frame(round(parmlist,10))
+options(scipen=-1000)
+data=data.frame(parmlist)
 allplots <- loadWorkbook("summary_statistics.xlsx", create = TRUE)
 createSheet(allplots, name = "parameterlist")
 writeWorksheet(allplots, means, sheet = "parameterlist", startRow = 1, startCol = 1)
@@ -175,6 +176,6 @@ singleplots <- loadWorkbook("singleplot_statistics.xlsx", create = TRUE)
 createSheet(singleplots, name = "parameterlist")
 writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
 saveWorkbook(singleplots)
-print("---------------------------------run started---------------------------------")
+print("---------------------------------finished---------------------------------")
 rm(list=ls())
 graphics.off()

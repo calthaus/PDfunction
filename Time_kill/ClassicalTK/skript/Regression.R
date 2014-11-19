@@ -33,17 +33,35 @@ decimalplaces <- function(x) {
     return(0)
   }
 }
+#function to replace filename with antibioticname
+pattern <- c(".+AZ.*",".+CIP.*",".+Tet.*",".+CT.*")
+replacement <- c("Azithromycin","Ciprofloxacin","Tetracyclin","Ceftriaxone")
+replace <- function(pattern, replacement, x, ...) {
+  if (length(pattern)!=length(replacement)) {
+    stop("pattern and replacement do not have the same length.")
+  }
+  result <- x
+  for (i in 1:length(pattern)) {
+    result <- gsub(pattern[i], replacement[i], result, ...)
+  }
+  result
+}
 #function to remove data when the antibiotic killed cells immediately (count of zero at 0 hours after adding the compound)
 remove <- function (x){ 
   for (i in 1:x){
-  mydatasub1 = subset(mydata,mydata$sample==problem$sample[1]&mydata$replicate==problem$replicate[1])
-  mydatasub2 = subset(mydata,mydata$sample==problem$sample[2]&mydata$replicate==problem$replicate[2])
-  mydatasub3 = subset(mydata,mydata$sample==problem$sample[3]&mydata$replicate==problem$replicate[3])
-  sub<-rbind(mydatasub1,mydatasub2,mydatasub3)
+    mydatasub1 = subset(mydata,mydata$sample==problem$sample[1]&mydata$replicate==problem$replicate[1])
+    mydatasub2 = subset(mydata,mydata$sample==problem$sample[2]&mydata$replicate==problem$replicate[2])
+    mydatasub3 = subset(mydata,mydata$sample==problem$sample[3]&mydata$replicate==problem$replicate[3])
+    sub<-rbind(mydatasub1,mydatasub2,mydatasub3)
   }
-return(sub)
+  return(sub)
 }
-
+#function to replace filename with antibioticname
+# replace <- function (j){
+#   titel=c(gsub(".+AZ.*","Azithromycin",j),gsub(".+CT.*","Ceftriaxon",j))
+#   
+# return(titel)
+# }
 #initialize some empty vectors and empty variables
 sub=vector() 
 parmlist=vector()
@@ -53,6 +71,7 @@ mydata=vector()
 means=vector()
 i <- 1
 j <- 1
+k <- 1
 #define patterns to be recognized
 sourcefiledir<-"input"
 verzeichnis<-"input"
@@ -108,10 +127,11 @@ for(j in unique(mydata$replicate)){
   slopes<-vector("numeric")
   options(scipen=1)
   #plot empty frame and legend so lines and points for each concentration can be added later on
-  plot(c(-2,6),c(10,1e11),type="n",xlab="Time [h]",main=j,log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.3,cex=1.4,lty=2,lwd=8)
+  plot(c(-2,6),c(10,1e11),type="n",xlab="Time [h]",log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.45,cex=1.4,lty=2,lwd=8)
   legend(x=3,y=100,"Limit of detection: 100 CFU/ml", bty="n",cex=0.8)
-  options(scipen=1000)
+  options(scipen=1000,digits=5)
   legend("topleft",legend=conc,col=mypalette,bty="n",pch=1,cex=0.7,title="conc.[mg/L]")
+  legend("topright",legend=replace(pattern,replacement,j),bty="n",cex=2)
   axis.break(axis=1,breakpos=-1,style="slash")
   abline(h =100, untf = FALSE,lty=2)
   #calculate the censoring (all values smaller or equal than 1 are censored)
@@ -141,9 +161,10 @@ for(j in unique(mydata$replicate)){
     points(x_points,y_points,col=mypalette[idose],lty=1, pch=1, cex=1.5)
     slopes <- c(fita,slopes)
   }
+  k=k+1
   dev.off()
 }
 #clean up workspace
 print("---------------------------------run finished--------------------------------")
-rm(list=ls())
+#rm(list=ls())
 graphics.off()
