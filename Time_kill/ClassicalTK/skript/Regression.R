@@ -25,17 +25,10 @@ is.integer0 <- function(x)
 {
   is.integer(x) && length(x) == 0L
 }
-#function to calculate decimalplaces for the antibiotic concentrations
-decimalplaces <- function(x) {
-  if ((x %% 1) != 0) {
-    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
-  } else {
-    return(0)
-  }
-}
+
 #function to replace filename with antibioticname
 pattern <- c(".+AZ.*",".+CIP.*",".+Tet.*",".+CT.*")
-replacement <- c("Azithromycin","Ciprofloxacin","Tetracyclin","Ceftriaxone")
+replacement <- c("(A) Azithromycin","(B) Ciprofloxacin","(C) Tetracyclin","(D) Ceftriaxone")
 replace <- function(pattern, replacement, x, ...) {
   if (length(pattern)!=length(replacement)) {
     stop("pattern and replacement do not have the same length.")
@@ -56,12 +49,7 @@ remove <- function (x){
   }
   return(sub)
 }
-#function to replace filename with antibioticname
-# replace <- function (j){
-#   titel=c(gsub(".+AZ.*","Azithromycin",j),gsub(".+CT.*","Ceftriaxon",j))
-#   
-# return(titel)
-# }
+
 #initialize some empty vectors and empty variables
 sub=vector() 
 parmlist=vector()
@@ -117,21 +105,24 @@ for(j in unique(mydata$replicate)){
   #define concentration in different formats for plotting in legend and as levels for regression
   antibiotic=data$antibiotic.conc
   ab.conc<-factor(antibiotic)
-  options(scipen=-1000)
+  options(scipen=1000)
   conc=levels(ab.conc)
   conc[conc==min(conc)]= 0
-  conc=as.vector(round((as.numeric(conc)),decimalplaces(as.numeric(min(conc)))))
+  conc=as.vector(signif(as.numeric(conc),digits=2))
+  conc2=mydata$antibiotic.conc
+  conc2[conc2==min(conc)]=0
   #time range for regression
   tmin<-0
   tmax<-6
   slopes<-vector("numeric")
   options(scipen=1)
   #plot empty frame and legend so lines and points for each concentration can be added later on
-  plot(c(-2,6),c(10,1e11),type="n",xlab="Time [h]",log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.45,cex=1.4,lty=2,lwd=8)
-  legend(x=3,y=100,"Limit of detection: 100 CFU/ml", bty="n",cex=0.8)
-  options(scipen=1000,digits=5)
-  legend("topleft",legend=conc,col=mypalette,bty="n",pch=1,cex=0.7,title="conc.[mg/L]")
-  legend("topright",legend=replace(pattern,replacement,j),bty="n",cex=2)
+  par(mar=c(4.7,5,2,1))
+  par(oma=c(0,0,0,0))
+  plot(c(-2,6),c(50,1e12),type="n",xlab="Time [h]",log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.5,cex=1.4,lty=2,lwd=8)
+  legend(x=2,y=100,"Limit of detection: 100 CFU/ml", bty="n",cex=0.9)
+  legend("topleft",legend=conc,col=mypalette,bty="n",pch=1,cex=0.85,title="conc.[mg/L]")
+  legend("topright",legend=replace(pattern,replacement,j),bty="n",cex=1.8)
   axis.break(axis=1,breakpos=-1,style="slash")
   abline(h =100, untf = FALSE,lty=2)
   #calculate the censoring (all values smaller or equal than 1 are censored)

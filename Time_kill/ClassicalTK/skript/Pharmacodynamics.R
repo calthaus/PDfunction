@@ -26,14 +26,7 @@ is.integer0 <- function(x)
 {
   is.integer(x) && length(x) == 0L
 }
-#function to calculate decimalplaces for the antibiotic concentrations
-decimalplaces <- function(x) {
-  if ((x %% 1) != 0) {
-    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
-  } else {
-    return(0)
-  }
-}
+
 #function to remove data when the antibiotic killed cells immediately (count of zero at 0 hours after adding the compound)
 remove <- function (x){ 
   for (i in 1:x){
@@ -97,12 +90,15 @@ for(j in unique(mydata$replicate)){
   ab.conc<-factor(antibiotic)
   slopes<-vector("numeric")
   #conc is needed to plot the points and for the regressions only for measured points conc2 to plot the lines until 6 hours
-  conc=round(data$antibiotic.conc,decimalplaces(min(data$antibiotic.conc)))
+  #define concentration in different formats for plotting in legend and as levels for regression
+  antibiotic=data$antibiotic.conc
+  ab.conc<-factor(antibiotic)
+  options(scipen=1000)
+  conc=levels(ab.conc)
+  conc[conc==min(conc)]= 0
+  conc=as.vector(signif(as.numeric(conc),digits=2))
   conc2=mydata$antibiotic.conc
   conc2[conc2==min(conc)]=0
-  conc[conc==min(conc)]=0
-  conc=factor(conc)
-  conc=levels(conc)
   #x values for linear regression
   tmin<-0
   tmax<-6
@@ -124,10 +120,12 @@ for(j in unique(mydata$replicate)){
   names(slopes)<-c("slope","dose")
   model=drm(slopes$slope~slopes$dose,fct=LL.4())
   #plot the pharmacodynamic model
-  options(scipen=1000)
-  plot(model,log="x", xlim=c(min(conc2),max(conc2)),ylim=c(-3,2.5),xlab="Antibiotic concentration [mg/L]",main=j, ylab="Growth rate [per hour]",pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.3)
-  legend("topright",conc, bty="n",pt.bg=mypalette,pch=21,cex=0.7,title="conc.[mg/L]")
-  axis.break(axis=1,breakpos=min(data$antibiotic.conc)*2,style="slash")
+  options(scipen=100)
+  par(mar=c(4.7,5,2,1))
+  par(oma=c(0,0,0,0) )
+  plot(model,log="x",xlim=c(min(antibiotic),max(antibiotic)*10),ylim=c(-3,2.5),xlab="Antibiotic concentration [mg/L]", ylab=expression("Bacterial growth rate[h"^-1*"]"),pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.5)
+  legend("topright",legend=conc, bty="n",pt.bg=mypalette,pch=21,cex=0.85,title="conc.[mg/L]")
+  axis.break(axis=1,breakpos=min(antibiotic)*1.5,style="slash")
   #extract parameters from model summary
   kappa=coefficients(model)[1]
   kappaerr=coef(summary(model))[1,2]
@@ -177,5 +175,5 @@ createSheet(singleplots, name = "parameterlist")
 writeWorksheet(singleplots,parmlist, sheet = "parameterlist", startRow = 1, startCol = 1)
 saveWorkbook(singleplots)
 print("---------------------------------finished---------------------------------")
-rm(list=ls())
+#rm(list=ls())
 graphics.off()
