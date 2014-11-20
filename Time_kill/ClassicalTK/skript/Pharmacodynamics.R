@@ -123,7 +123,11 @@ for(j in unique(mydata$replicate)){
   options(scipen=100)
   par(mar=c(4.7,5,2,1))
   par(oma=c(0,0,0,0) )
-  plot(model,log="x",xlim=c(min(antibiotic),max(antibiotic)*10),ylim=c(-3,2.5),xlab="Antibiotic concentration [mg/L]", ylab=expression("Bacterial growth rate[h"^-1*"]"),pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.5)
+  plot(model,log="x",xlim=c(min(antibiotic),max(antibiotic)*10),ylim=c(-3,2.5),axes=F,xlab="Antibiotic concentration [mg/L]", ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21, bg=mypalette, cex=1.4,lwd=1.3,cex.lab=1.5)
+  #ticksx=axisTicks(c(min(antibiotic),max(antibiotic)),axp=c(0, max(antibiotic), 6), log=F, nint = 6)  
+  #axis(1,at=log10(c(min(antibiotic),max(antibiotic))))
+  #axis(2, at=c(-3,2,1,0,1,2,2.5),labels=c(-3,2,1,0,1,2,2.5))
+  magaxis(side=c(1,2),logpretty=TRUE)
   legend("topright",legend=conc, bty="n",pt.bg=mypalette,pch=21,cex=0.85,title="conc.[mg/L]")
   axis.break(axis=1,breakpos=min(antibiotic)*1.5,style="slash")
   #extract parameters from model summary
