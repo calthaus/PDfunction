@@ -9,7 +9,6 @@ library("drc")
 library("XLConnect")
 library("bbmle")
 library("drc")
-library("magicaxis")
 # define some functions:
 # Negative log-likelihood
 nll <- function(a, b, sigma, data = data2regress) {
@@ -120,14 +119,12 @@ for(j in unique(mydata$replicate)){
   #plot empty frame and legend so lines and points for each concentration can be added later on
   par(mar=c(4.7,5,2,1))
   par(oma=c(0,0,0,0))
-  plot(c(-2,6),c(50,2e10),type="n",xlab="Time [h]",axes=F,log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.5,cex=1.4,lty=2,lwd=8)
-  magaxis(side=c(1,2),logpretty=TRUE)
+  plot(c(-2,6),c(50,1e12),type="n",xlab="Time [h]",log="y",ylab="Bacteria [CFU/ml]",cex.lab=1.5,cex=1.4,lty=2,lwd=8)
   legend(x=2,y=100,"Limit of detection: 100 CFU/ml", bty="n",cex=0.9)
-  legend(x=-2.2,y=4e+10,legend=conc,col=mypalette,bty="n",pch=1,cex=0.85,title="conc.[mg/L]")
+  legend("topleft",legend=conc,col=mypalette,bty="n",pch=1,cex=0.85,title="conc.[mg/L]")
   legend("topright",legend=replace(pattern,replacement,j),bty="n",cex=1.8)
   axis.break(axis=1,breakpos=-1,style="slash")
   abline(h =100, untf = FALSE,lty=2)
-  box()
   #calculate the censoring (all values smaller or equal than 1 are censored)
   for(idose in 1:nlevels(ab.conc)){
     dose<-as.numeric(levels(ab.conc)[idose])
