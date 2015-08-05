@@ -37,10 +37,10 @@ script Figure2.R fits linear regression to data from WHO G, WHO K, WHO L, WHO M,
 script Figure3.R fits linear regression to one representative experiment of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline
 <br>
 <b>Figure 4</b><br>
-A: script Figure4A.R fits linear regression to DOGK18 treated with cefixime. Regressions are shown as dotted lines. 
-B: script Figure4B.R fits pharmacodynamic function to DOGK18 treated with cefixime. Dotted line shows fit without outliers removed.
-C: script Figure4C.R takes model parameters of plots from figure 2 from file singleplot_statistics_panel.xls and plots them as solid lines in different colors for comparison.
-D: script Figure4D.R takes model parameters of plots from figure 3 from file summary_statistics_9AB (arithmetic mean of parameters from 2 replicates) and plots them as solid lines in different colors for comparison.
+A: script Figure4A.R fits linear regression to DOGK18 treated with cefixime. Regressions are shown as dotted lines.<br> 
+B: script Figure4B.R fits pharmacodynamic function to DOGK18 treated with cefixime. Dotted line shows fit without outliers removed.<br>
+C: script Figure4C.R takes model parameters of plots from figure 2 from file singleplot_statistics_panel.xls and plots them as solid lines in different colors for comparison.<br>
+D: script Figure4D.R takes model parameters of plots from figure 3 from file summary_statistics_9AB (arithmetic mean of parameters from 2 replicates) and plots them as solid lines in different colors for comparison.<br>
 ABCD: Latex script to make panel from A,B,C,D
 <br>
 <b>Table 1</b><br>
