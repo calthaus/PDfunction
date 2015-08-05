@@ -1,18 +1,17 @@
 <html>
 <h6>Contains data and scripts to reproduce the figures of the paper </h6><br>
-<h3>"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against Neisseria gonorrhoeae" </h3><br>
-<h6>Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus)</h6><br>
+<h3>"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against <i>Neisseria gonorrhoeae"</i> </h3><br>
+<h6>Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus</h6><br>
 <body><br>
-<b>Software Versions Used:</b>
-
+<b>Software Versions Used</b>
 R version 3.2.0 (2015-04-16)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 8 x64 (build 9200)
 <br>
 locale:
 [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-[5] LC_TIME=English_United Kingdom.1252    
-
+[5] LC_TIME=English_United Kingdom.1252
+<br>
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 <br>
@@ -48,7 +47,8 @@ ABCD: Latex script to make panel from A,B,C,D
 script Pharmacodynamics_DOGK18 fits pharmacodynamic function to two independent experiments of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline. Table 1 shows the arithmetic mean of the parameters and resistance determinants as published elsewhere.
 script Table1 means calculates the means of the two independent experiments.
 <br>
-<b>Figure S1</b> script growthcurves_3curves.R fits gompertz model to Growth_GW_short.txt (data from decline phase removed, complete raw data in Growth_GW.txt)
+<b>Figure S1</b><br> 
+script growthcurves_3curves.R fits gompertz model to Growth_GW_short.txt (data from decline phase removed, complete raw data in Growth_GW.txt)
 <br>
 <b>Table S1</b><br>
 Pharmacodynamics_wt.R fits pharmacodynamic function to two independent experiments of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline and summarizes parameter estimates and standard errors.
