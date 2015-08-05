@@ -1,12 +1,12 @@
 <html>
 <h1>PDfunction<h1>
 
-<h3>Contains data and scripts to reproduce the figures of the paper <br>
-"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against Neisseria gonorrhoeae" <br>
-Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus)<h3><br>
-
+<h6>Contains data and scripts to reproduce the figures of the paper <h6><br>
+<h3>"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against Neisseria gonorrhoeae" <h3><br>
+<h6>Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus)<h6><br>
+<body><br>
 Software Versions Used
-<br>
+
 R version 3.2.0 (2015-04-16)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 8 x64 (build 9200)
@@ -57,4 +57,4 @@ Pharmacodynamics_wt.R fits pharmacodynamic function to two independent experimen
 
 <b>Table S2</b><br>
 Pharmacodynamics_panel.R fits pharmacodynamic function to to data from WHO G, WHO K, WHO L, WHO M, WHO N treated with 11 doubling concentrations of ciprofloxacin and untreated control and summarizes parameter estimates and standard errors.
-
+</body>
