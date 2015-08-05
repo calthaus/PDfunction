@@ -1,0 +1,12 @@
+nr	sampleid	sampleid2	etest	name	strain	color	pct	straincol	linetype	strainname	letter
+1	WT_AZ	WT_AZ	0.19	azithromycin	WT	black	53	black	1	azithromycin	(C)
+2	WT_CX	WT_CX	0.016	cefixime	WT	maroon2	59	maroon2	1	cefixime	(F)
+3	WT_CT	WT_CT	0.002	ceftriaxone	WT	blue	52	blue	1	ceftriaxone	(E)
+4	WT_Chlor	WT_Chlor	0.19	chloramphenicol	WT	orange	56	orange	1	chloramphenicol	(G)
+5	WT_Gen	WT_Gen	1	gentamicin	WT	darkgrey	58	darkgrey	1	gentamicin	(A)
+6	WT_Pen	WT_Pen	0.032	penicillin	WT	purple3	55	purple3	1	benzylpenicillin	(D)
+7	WT_Spec	WT_Spec	4	spectinomycin	WT	cyan3	57	cyan3	1	spectinomycin	(B)
+8	WT_Tet	WT_Tet	0.125	tetracycline	WT	green	54	green	1	tetracycline	(H)
+9	WT_CIP	WT_CIP	0.006	ciprofloxacin	WT	"red"	50	"red"	1	strain: DOGK18	(I)
+
+

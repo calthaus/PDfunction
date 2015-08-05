@@ -1,0 +1,7 @@
+nr	sampleid	sampleid2	etest	name	strain	color	pct	straincol	linetype	strainname	letter
+1	WHOG_CIP	WHOG_CIP	0.125	ciprofloxacin	WHOG	"#1B9E77"	50	"#1B9E77"	1	strain: WHO G	(A)
+2	WHOK_CIP	WHOK_CIP	32	ciprofloxacin	WHOK	"#D95F02"	50	"#D95F02"	1	strain: WHO K	(B)
+3	WHOL_CIP	WHOL_CIP	32	ciprofloxacin	WHOL	"#7570B3"	50	"#7570B3"	1	strain: WHO L	(C)
+4	WHOM_CIP	WHOM_CIP	2	ciprofloxacin	WHOM	"#E7298A"	50	"#E7298A"	1	strain: WHO M	(D)
+5	WHON_CIP	WHON_CIP	4	ciprofloxacin	WHON	"#66A61E"	50	"#66A61E"	1	strain: WHO N	(E)
+6	DOGK18_CIP	DOGK18_CIP	0.006	ciprofloxacin	DOGK18	"red"	50	"red"	1	strain: DOGK18	(F)
