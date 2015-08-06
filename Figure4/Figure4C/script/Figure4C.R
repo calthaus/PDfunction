@@ -42,5 +42,4 @@ strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofl
 strainname<-c("WHO G (LLR)","WHO K (HLR)","WHO L (HLR)","WHO M (R)","WHO N (R)","DOGK18 (S)")
 legend("topleft",legend=letter,bty="n",inset=c(-0.1,-0.05), cex=3.6) 
 legend("bottomleft",legend=strainname, bty="n",col=c("#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E","red"),lty=c(1,1,1,1,1,1),lwd=3, cex=1.5)
-#legend("topright",legend="antimicrobial: ciprofloxacin",bty="n", inset=c(0.09,0), cex=2) 
 dev.off()
