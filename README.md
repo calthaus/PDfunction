@@ -1,8 +1,8 @@
 <html>
-<h6>Contains data and scripts to reproduce the figures of the paper </h6><br>
 <h3>"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against <i>Neisseria gonorrhoeae"</i> </h3><br>
 <h6>Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus</h6><br>
 <body><br>
+Contains data and scripts to reproduce the figures of the paper<br>
 <b>Software Versions Used</b><br>
 R version 3.2.0 (2015-04-16)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
