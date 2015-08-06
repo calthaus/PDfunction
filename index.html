@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Pharmacodynamic function for time-kill curve analysis by sunnivas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Pharmacodynamic function for time-kill curve analysis</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/sunnivas/PDfunction" class="btn">View on GitHub</a>
+      <a href="https://github.com/sunnivas/PDfunction/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sunnivas/PDfunction/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>
+</p><h6>
+<a id="contains-data-and-scripts-to-reproduce-the-figures-of-the-paper-" class="anchor" href="#contains-data-and-scripts-to-reproduce-the-figures-of-the-paper-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contains data and scripts to reproduce the figures of the paper </h6><br>
+<h3>
+<a id="time-kill-curve-analysis-and-pharmacodynamic-functions-for-in-vitro-evaluation-of-antimicrobials-against-neisseria-gonorrhoeae-" class="anchor" href="#time-kill-curve-analysis-and-pharmacodynamic-functions-for-in-vitro-evaluation-of-antimicrobials-against-neisseria-gonorrhoeae-" aria-hidden="true"><span class="octicon octicon-link"></span></a>"Time-kill curve analysis and pharmacodynamic functions for in vitro evaluation of antimicrobials against <i>Neisseria gonorrhoeae"</i> </h3><br>
+<h6>
+<a id="sunniva-förster-magnus-unemo-lucy-j-hathaway-nicola-low-christian-l-althaus" class="anchor" href="#sunniva-f%C3%B6rster-magnus-unemo-lucy-j-hathaway-nicola-low-christian-l-althaus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sunniva Förster, Magnus Unemo, Lucy J. Hathaway, Nicola Low, Christian L. Althaus</h6><br>
+<br>
+<b>Software Versions Used</b><br>
+R version 3.2.0 (2015-04-16)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 8 x64 (build 9200)
+<br>
+locale:
+[1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C<br>
+[5] LC_TIME=English_United Kingdom.1252
+<br>
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base<br>
+<br>
+other attached packages:
+ [1] censReg_0.5-20      maxLik_1.2-4        miscTools_0.6-16    magicaxis_1.9.4     sm_2.2-5.4          plotrix_3.5-12      metafor_1.9-7       Matrix_1.2-0<br>
+ [9] XLConnect_0.2-11    XLConnectJars_0.2-9 drc_2.5-12          MASS_7.3-40<br>
+<br>
+loaded via a namespace (and not attached):
+ [1] Rcpp_0.12.0      nloptr_1.0.4     plyr_1.8.3       tools_3.2.0      lme4_1.1-8       nlme_3.1-120     lattice_0.20-31  mgcv_1.8-6       glmmML_1.0<br>
+[10] parallel_3.2.0   mvtnorm_1.0-3    SparseM_1.6      rJava_0.9-7      gtools_3.5.0     grid_3.2.0       nnet_7.3-9       survival_2.38-1  multcomp_1.4-1<br>
+[19] TH.data_1.0-6    minqa_1.2.4      car_2.0-25       scales_0.2.5     codetools_0.2-11 splines_3.2.0    pbkrtest_0.4-2   colorspace_1.2-6 quantreg_5.11<br>
+[28] sandwich_2.3-3   munsell_0.4.2    zoo_1.7-12
+
+<p><b>Figure 1</b><br>
+Example to illustrate the parameters of the pharmacodynamic function
+Example to illustrate the parameters of the pharmacodynamic function
+<br>
+<b>Figure 2</b><br>
+script Figure2.R fits linear regression to data from WHO G, WHO K, WHO L, WHO M, WHO N treated with 11 doubling concentrations of ciprofloxacin and untreated control.
+<br>
+<b>Figure 3</b><br>
+script Figure3.R fits linear regression to one representative experiment of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline
+<br>
+<b>Figure 4</b><br>
+A: script Figure4A.R fits linear regression to DOGK18 treated with cefixime. Regressions are shown as dotted lines.<br> 
+B: script Figure4B.R fits pharmacodynamic function to DOGK18 treated with cefixime. Dotted line shows fit without outliers removed.<br>
+C: script Figure4C.R takes model parameters of plots from figure 2 from file singleplot_statistics_panel.xls and plots them as solid lines in different colors for comparison.<br>
+D: script Figure4D.R takes model parameters of plots from figure 3 from file summary_statistics_9AB (arithmetic mean of parameters from 2 replicates) and plots them as solid lines in different colors for comparison.<br>
+ABCD: Latex script to make panel from A,B,C,D
+<br>
+<b>Table 1</b><br>
+script Pharmacodynamics_DOGK18 fits pharmacodynamic function to two independent experiments of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline. Table 1 shows the arithmetic mean of the parameters and resistance determinants as published elsewhere.
+script Table1 means calculates the means of the two independent experiments.
+<br>
+<b>Figure S1</b><br> 
+script growthcurves_3curves.R fits gompertz model to Growth_GW_short.txt (data from decline phase removed, complete raw data in Growth_GW.txt)
+<br>
+<b>Table S1</b><br>
+Pharmacodynamics_wt.R fits pharmacodynamic function to two independent experiments of DOGK18 treated with gentamicin, spectinomycin, azithromycin, benzylpenicillin, ceftriaxone, cefixime, chloramphenicole, tetracycline and summarizes parameter estimates and standard errors.
+<br>
+<b>Table S2</b><br>
+Pharmacodynamics_panel.R fits pharmacodynamic function to to data from WHO G, WHO K, WHO L, WHO M, WHO N treated with 11 doubling concentrations of ciprofloxacin and untreated control and summarizes parameter estimates and standard errors.
+</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sunnivas/PDfunction">Pharmacodynamic function for time-kill curve analysis</a> is maintained by <a href="https://github.com/sunnivas">sunnivas</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
