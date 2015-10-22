@@ -38,8 +38,8 @@ curve(psi(data$upper[m],data$lower[m],data$kappa[m],data$zMIC[m],x),1e-7,10000,a
 m=m+1
 print(m)
 }
-strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofloxacin","gentamycin","penicillin","spectinomycin","tetracycline")
-strainname<-c("WHO G (LLR)","WHO K (HLR)","WHO L (HLR)","WHO M (R)","WHO N (R)","DOGK18 (S)")
+# strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofloxacin","gentamycin","penicillin","spectinomycin","tetracycline")
+strainname<-c("WHO G (LLR)","WHO K (HLR)","WHO L (HLR)","WHO M (R)","WHO N (R)")
 legend("topleft",legend=letter,bty="n",inset=c(-0.1,-0.05), cex=3.6) 
-legend("bottomleft",legend=strainname, bty="n",col=c("#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E","red"),lty=c(1,1,1,1,1,1),lwd=3, cex=1.5)
+legend("bottomleft",legend=strainname, bty="n",col=c("#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E"),lty=c(1,1,1,1,1,1),lwd=3, cex=1.5)
 dev.off()

@@ -89,7 +89,7 @@ for(j in unique(mydata$replicate)){
   #plot empty frame and legend so lines and points for each concentration can be added later on
   par(mar=c(4.7,5,2,7))
   par(oma=c(0,0,0,0))
-  plot(c(-4,6),c(10,2e9),type="n",xlab="Time [h]",axes=F,log="y",bty="l",main="", ylab="Bacteria [CFU/ml]",cex.lab=1.8,cex=1.6,lty=2,lwd=1.8)
+  plot(c(-4,6),c(10,2e9),type="n",xlab="Time [h]",axes=F,log="y",bty="l",main="", ylab="Bacteria [CFU/ml]",cex.lab=1.8,cex=1.8,lty=2,lwd=2)
   box()
   magaxis(side=c(1,2),logpretty=TRUE,cex.axis=1.3)
   par(savefont)

@@ -2,8 +2,14 @@
 ##################################growth rates with censoring and pharmacodynamics#################################################
 ###################################################################################################################################
 #set working directory
-setwd("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK")
-samplenames<-read.table("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK/input/samplenames_off-target.txt",sep="\t",header=T)
+
+setwd("C:/Users/sunny/Desktop/PDfunction/Figure4/Figure4B/output/")
+samplenames<-read.table("C:/Users/sunny/Desktop/PDfunction/Figure4/Figure4B/data/samplenames_off-target.txt",sep="\t",header=T)
+#define patterns to be recognized
+sourcefiledir<-"C:/Users/sunny/Desktop/PDfunction/Figure4/Figure4B/data"
+verzeichnis<-"C:/Users/sunny/Desktop/PDfunction/Figure4/Figure4B/data"
+
+sourcefilepattern<-".txt"
 ablist<-as.vector(samplenames$sampleid)
 foldername<-"off-target"
 letter<-""
@@ -28,9 +34,9 @@ k <- 1
 m <- 1
 l <- 1
 #define patterns to be recognized
-sourcefiledir<-paste("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK/input/",foldername,sep="")
-verzeichnis<-paste("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK/input/",foldername,sep="")
-sourcefilepattern<-".txt"
+# sourcefiledir<-paste("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK/input/",foldername,sep="")
+# verzeichnis<-paste("C:/Documents and Settings/mollab/Mina dokument/Dropbox/Time_kill/ClassicalTK/input/",foldername,sep="")
+# sourcefilepattern<-".txt"
 #define some colors
 mypalette<- c("red","lightblue","lightblue","lightblue","#C6DBEF", "#9ECAE1" ,"#6BAED6" ,"#4292C6" ,"#2171B5" ,"#08519C", "#08306B","black","black","black","black","black")
 # list of all files and pattern to be recognized in these files
@@ -39,12 +45,9 @@ pdf(paste(foldername,"B.pdf",sep=""),width = 9, height = 8)
 options(scipen=100)
 par(mar=c(4.7,5,2,7))
 par(oma=c(0,0,0,0))
-plot(model,log="x",type="n",xlim=c(0.0000001,0.1),ylim=c(-15,3),axes=F,bty="l",xlab=paste("antimicrobial concentration (mg/l)"), ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21, bg=mypalette, cex=1.6,lwd=5,cex.lab=1.8,col="black")
-strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofloxacin","gentamycin","penicillin","spectinomycin","tetracycline")
-legend("topleft",legend="(B)",bty="n",inset=c(-0.1,-0.05), cex=3.6) 
-legend("topright",legend="strain: WT 103",bty="n",inset=0, cex=2) 
+plot(model,log="x",type="n",xlim=c(0.0000001,0.1),ylim=c(-15,3),axes=F,bty="l",xlab=paste("antimicrobial concentration [mg/l]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21, bg=mypalette, cex=1.8,lwd=5,cex.lab=1.8,col="black")
 legend("bottomleft",legend=conc, bty="n",pt.bg=mypalette,pch=21,cex=1.2,inset=0.02,title="conc.[mg/L]",xpd=T)
-
+strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofloxacin","gentamycin","penicillin","spectinomycin","tetracycline")
 box()
 options(scipen=1)
 magaxis(side=c(1,2),logpretty=TRUE,cex.axis=1.3)
@@ -99,6 +102,7 @@ for(j in unique(mydata$replicate)){
   conc=levels(ab.conc)
   conc=as.vector(signif(as.numeric(conc),digits=2))
   conc[conc==min(conc)]= 0
+
   #x values for linear regression
   tmin<-0
   tmax<-6
@@ -120,7 +124,10 @@ for(j in unique(mydata$replicate)){
   #fit pharmacodynamic function (Emax with four parameters) to growth rates using drc (based on optim)
   names(slopes)<-c("slope","dose")
   model=drm(slopes$slope~slopes$dose,fct=LL.4())
-  plot(model,log="x",xlim=c(0.0000001,100000),ylim=c(-15,3),col=color,lty=linet,axes=F,bty="l",main="",xlab=paste(antibiotics,"concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21, bg=mypalette, cex=1.6,lwd=2,cex.lab=1.8,add=T)
+  plot(model,log="x",xlim=c(0.0000001,100000),ylim=c(-15,3),col=color,lty=linet,axes=F,bty="l",main="",xlab=paste(antibiotics,"concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21, bg=mypalette, cex=1.8,lwd=2,cex.lab=1.8,add=T)
+  legend("topleft",legend="(B)",bty="n",inset=c(-0.1,-0.05), cex=3.6) 
+  legend("topright",legend="strain: WT 103",bty="n",inset=0, cex=2) 
+  
   
   kappa=coefficients(model)[1]
   kappaerr=coef(summary(model))[1,2]

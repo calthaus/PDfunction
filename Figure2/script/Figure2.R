@@ -93,7 +93,7 @@ for(j in unique(mydata$replicate)){
   box()
   magaxis(side=c(1,2),logpretty=TRUE,cex.axis=1.3)
   par(savefont)
-  legend(("bottomleft" ),legend=conc,lty=1,inset=0.02,col=mypalette,lwd=2,pch=1,cex=1.2,bty="n",title="conc.[mg/L]",xpd=T)
+  legend(("bottomleft" ),legend=conc,lty=1,inset=0.02,col=mypalette,lwd=2,pch=1,cex=1.2,bty="n",title="dasdfsd",xpd=T)
   legend(-5.5,9000000000,legend=letter,bty="n",inset=0, cex=3.6) 
   legend("topright",legend=strainame,bty="n",inset=0, cex=2) 
   for(idose in 1:nlevels(ab.conc)){

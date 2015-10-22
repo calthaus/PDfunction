@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.6.5)  4 AUG 2015 19:32
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.6.5)  21 AUG 2015 15:37
 entering extended mode
 **Figure2.tex
 (C:\Users\sunny\Desktop\PDfunction\Figure2\output\Figure2.tex
@@ -180,18 +180,18 @@ Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
 \JustifyingParindent=\skip58
 )
 (C:\Users\sunny\Desktop\PDfunction\Figure2\output\Figure2.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -245,7 +245,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 14.
+LaTeX Info: Redefining \selectfont on input line 11.
 
 <WHOG_CIPregression.pdf, id=1, 650.43pt x 578.16pt>
 <use WHOG_CIPregression.pdf>
@@ -257,63 +257,6 @@ LaTeX Info: Redefining \selectfont on input line 14.
 <use WHOM_CIPregression.pdf>
 <WHON_CIPregression.pdf, id=9, 650.43pt x 578.16pt>
 <use WHON_CIPregression.pdf>
-<DOGK18_CIPregression.pdf, id=11, 650.43pt x 578.16pt>
-<use DOGK18_CIPregression.pdf>
-File: WHOG_CIPregression.pdf Graphic file (type pdf)
- <use WHOG_CIPregression.pdf>
-Package pdftex.def Info: WHOG_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-File: WHOK_CIPregression.pdf Graphic file (type pdf)
-
-<use WHOK_CIPregression.pdf>
-Package pdftex.def Info: WHOK_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-File: WHOL_CIPregression.pdf Graphic file (type pdf)
- <use WHOL_CIPregression.pdf>
-Package pdftex.def Info: WHOL_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-File: WHOM_CIPregression.pdf Graphic file (type pdf)
-
-<use WHOM_CIPregression.pdf>
-Package pdftex.def Info: WHOM_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-File: WHON_CIPregression.pdf Graphic file (type pdf)
- <use WHON_CIPregression.pdf>
-Package pdftex.def Info: WHON_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-File: DOGK18_CIPregression.pdf Graphic file (type pdf)
-
-<use DOGK18_CIPregression.pdf>
-Package pdftex.def Info: DOGK18_CIPregression.pdf used on input line 27.
-(pdftex.def)             Requested size: 207.13956pt x 184.12395pt.
-
-Underfull \hbox (badness 10000) in alignment at lines 27--27
-[][] 
- []
-
-[1
-
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/sunny/Desktop/PD
-function/Figure2/output/WHOG_CIPregression.pdf> <C:/Users/sunny/Desktop/PDfunct
-ion/Figure2/output/WHOK_CIPregression.pdf> <C:/Users/sunny/Desktop/PDfunction/F
-igure2/output/WHOL_CIPregression.pdf> <C:/Users/sunny/Desktop/PDfunction/Figure
-2/output/WHOM_CIPregression.pdf> <C:/Users/sunny/Desktop/PDfunction/Figure2/out
-put/WHON_CIPregression.pdf> <C:/Users/sunny/Desktop/PDfunction/Figure2/output/D
-OGK18_CIPregression.pdf>]
-(C:\Users\sunny\Desktop\PDfunction\Figure2\output\Figure2.aux) ) 
-Here is how much of TeX's memory you used:
- 2985 strings out of 493921
- 46747 string characters out of 3144877
- 104296 words of memory out of 3000000
- 6280 multiletter control sequences out of 15000+200000
- 3640 words of font info for 14 fonts, out of 3000000 for 9000
- 841 hyphenation exceptions out of 8191
- 36i,10n,38p,239b,306s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on Figure2.pdf (1 page, 45962 bytes).
-PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 500000)
- 103 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+!pdfTeX error: pdflatex (file C:/Users/sunny/Desktop/PDfunction/Figure2/output/
+DOGK18_CIPregression.pdf): PDF inclusion: required page does not exist <0>
+ ==> Fatal error occurred, no output PDF file produced!

@@ -10,6 +10,7 @@ library("XLConnect")
 pdf("figure4D.pdf",width = 9, height = 8)
 means<-c()
 m<-1
+letter="(D)"
 ## Add an alpha value to a colour
 add.alpha <- function(col, alpha=1){
   if(missing(col))
@@ -36,7 +37,7 @@ curve(psi(data$psi_max[m],data$psi_min[m],data$Kappa[m],data$zMIC[m],x),1e-7,100
 m=m+1
 print(m)
 }
-strainname<-c("azithromycin","cefixime","ceftriaxone","chloramphenicol","ciprofloxacin","gentamicin","penicillin","spectinomycin","tetracycline")
+strainname<-c("ciprofloxacin","gentamicin","spectinomycin","azithromycin","benzylpenicillin","ceftriaxone","cefixime","chloramphenicole","tetracycline")
 legend("topleft",legend=letter,bty="n",inset=c(-0.1,-0.05), cex=3.6) 
 legend("bottomleft",legend=strainname, bty="n",col=c("black","maroon2","blue","orange","red","darkgrey","purple3","cyan3","green"),lty=c(1,1,1,1,1,1),lwd=3, cex=1.5)
 dev.off()

@@ -101,7 +101,7 @@ for(j in unique(mydata$replicate)){
   options(scipen=-1)
   par(mar=c(4.7,5,2,7))
   par(oma=c(0,0,0,0))
-  plot(c(0.0000001,1000),c(-15,3),axes=F,bg=mypalette,bty="l",xlab=paste("ETX0914 concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),log="x",cex.lab=1.8,col="white")
+  plot(c(0.0000001,1000),c(-5,3),axes=F,bg=mypalette,bty="l",xlab=paste(strainame,"concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),log="x",cex.lab=1.8,col="white")
   plot(model,log="x",xlim=c(0.0000001,1000),axes=F,bty="l",xlab=paste(toString(antibiotics[1]),"concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),pch=21,lty=1, bg=mypalette, cex=1.8,lwd=2,cex.lab=1.8,add=TRUE)
   points(slopes$dose,slopes$slope,pch=21, bg=mypalette,cex=1.8,lwd=2)
   box()

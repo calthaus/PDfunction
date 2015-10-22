@@ -1,3 +1,0 @@
-nr	sampleid	sampleid2	etest	name	strain	color	pct	straincol	linetype	strainname	letter
-11	WT_CX2	WT_CX2	32	cefixime	WT	"black"	0	"black"	2	strain: WT 103	(A)
-10	WT_CX1	WT_CX1	32	cefixime	WT	"black"	0	"black"	1	strain: WT 103	(A)
