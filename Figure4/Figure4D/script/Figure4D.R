@@ -27,7 +27,7 @@ par(mar=c(4.7,5,2,7))
 par(oma=c(0,0,0,0))
 plot(c(0.0000001,10000),c(-10,3),log="x",axes=F,bty="l",xlab=paste("Antimicrobial concentration [mg/L]"), ylab=expression("Bacterial growth rate [h"^-1*"]"),cex.lab=1.8,col="white")
 box()
-magaxis(side=c(1,2),logpretty=TRUE,cex.axis=1.3)
+magaxis(side=c(1,2),logpretty=TRUE,majorn=5,minorn=5,cex.axis=1.3)
 
 psi<-function(psimax,psimin,kappa,MIC,conc) {
   psimax-(psimax-psimin)*(conc/MIC)^kappa/((conc/MIC)^kappa-psimin/psimax)
